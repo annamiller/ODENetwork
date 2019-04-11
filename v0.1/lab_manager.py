@@ -329,14 +329,20 @@ def show_all_dendrite_onto_layer(time_sampled_range, data, net, layer_idx, delta
             ii = synapse.ii
             v = data[:,ii]
             m = data[:,ii+1]
+            m_eq = data[-1,ii+1]
+            print(m_eq)
             h = data[:,ii+2]
+            h_eq = data[-1,ii+2]
+            print(h_eq)
             n = data[:,ii+3]
+            n_eq = data[-1,ii+3]
+            print(n_eq)
             a = data[:,ii+4]
             a_eq = data[-1,ii+4]
-            # print(a_eq)
+            print(a_eq)
             b = data[:,ii+5]
             b_eq = data[-1,ii+5]
-            # print(b_eq)
+            print(b_eq)
             ng = data[:,ii+6]
             ag = data[:,ii+7]
             ca = data[:,ii+8]
@@ -349,11 +355,12 @@ def show_all_dendrite_onto_layer(time_sampled_range, data, net, layer_idx, delta
             P = data[:,ii+11]
             D = data[:,ii+12]
             w = synapse.G0*p0 + synapse.G1*p1 + synapse.G2*p2
-            # print(w)
+            print(w)
             # i_a = -synapse.COND_A*ma*ha*(v - synapse.RE_PO_K)
             i_ampa = -synapse.initial_cond*w*ag*(v-synapse.RE_PO_EX)
             B_nmda = 1./(1.+(1./3.57)*synapse.MG*np.exp(-0.062*v))
             i_nmda = -synapse.COND_NMDA*ng*B_nmda*(v-synapse.RE_PO_EX)
+            i_syn = i_ampa + i_nmda
             i_vgcc = -synapse.COND_CA*(v/synapse.CA_EQM) \
                 *(ca - synapse.CA_EX*np.exp(-2*v*synapse.FRT)) \
                 /(1 - np.exp(-2*v*synapse.FRT)) \
@@ -382,7 +389,9 @@ def show_all_dendrite_onto_layer(time_sampled_range, data, net, layer_idx, delta
             axes[1].plot(DT, b, label="b")
             #np.savetxt('b.txt', np.transpose([DT, b]))
             axes[1].legend()
-            axes[2].plot(DT, i_ds, label="DS")
+            #axes[2].plot(DT, i_ds, label="i_ds")
+            axes[2].plot(DT, i_ampa, label="i_ampa")
+            #axes[2].plot(DT, i_syn, label="i_syn")
             #axes[2].plot(DT, i_vgcc, label="I_VGCC")
             #np.savetxt('i_vgcc.txt', np.transpose([DT, i_vgcc]))
             #axes[2].plot(DT, i_nmda, label="I_NMDA")

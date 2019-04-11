@@ -60,7 +60,7 @@ def get_data(delta_time):
 
 # step 5: plot
 
-delta_time = -5
+delta_time = 10
 data = get_data(delta_time)
 
 for layer_idx in range(len(net.layers)):
@@ -71,7 +71,7 @@ for layer_idx in range(len(net.layers)):
 
 # stdp profile
 
-DT = np.linspace(-20,30,26)
+DT = np.linspace(-20,30,51)
 print(DT)
 DW = np.zeros(len(DT))
 ##############
