@@ -21,20 +21,19 @@ glo_para = dict(num_pn=6, num_ln=2, # flies: 3 and 30
     PNClass=nm.PN_2, LNClass=nm.LN,
     PNSynapseClass=nm.Synapse_nAch_PN_2, LNSynapseClass=nm.Synapse_gaba_LN_with_slow)
 
-
-al_prob_para = {}
-al_cond_para = dict(gLN = 110, gPN = -1.0, gLNPN=200, gPNLN=600)
-al_para = dict(num_glo=15, glo_para=glo_para,al_prob_para=al_prob_para, al_cond_para=al_cond_para) # flies: 54
+al_prob_para = dict(prob_l2p = 0.4, prob_l2l=0.4)
+al_cond_para = dict(gLN = 110, gPN = -1.0, gLNPN=400, gPNLN=400)
+al_para = dict(num_glo=45, glo_para=glo_para,al_prob_para=al_prob_para, al_cond_para=al_cond_para) # flies: 54
 
 
 AL = net.get_antennal_lobe(**al_para)
 
 
-folder_prefix = 'results/test_script/'
+folder_prefix = 'results/'
 # net.draw_colored_layered_digraph(AL)
 
 num_layers = len(AL.layers)
-Ibase = 400 # nA
+Ibase = 1000 # nA
 p = 0.33 # probability of injecting
 
 #run for specified time with dt
