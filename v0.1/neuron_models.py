@@ -2507,7 +2507,9 @@ class PN_2:
 
 
     def get_initial_condition(self):
-        return [-65.0+np.random.normal(0,2.0), 0.05+np.random.uniform()*0.1, 0.8 + np.random.uniform()*0.2, 0.2+np.random.uniform()*0.3, 0.1+np.random.uniform()*0.1, 0.8+np.random.uniform()*0.2]
+        return [-65.0+ np.random.normal(0,2.0),0.05 + np.random.uniform()*0.1, \
+                0.8 + np.random.uniform()*0.2, 0.0 + np.random.uniform()*0.05, \
+                0.3 + np.random.uniform()*0.1, 0.1 + np.random.uniform()*0.1]
 
     def get_ind(self):
         return self.ii
