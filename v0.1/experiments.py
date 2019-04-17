@@ -79,6 +79,16 @@ def draw_from_gaussian_clusters(i, num_sample=1):
     mean = [x_means[i], y_means[i]]
     return np.clip(np.random.multivariate_normal(mean, cov, num_sample), 0.1, 1.)
 
+def periodic_train(rates, time_total=100.):
+    trains = []
+    for rate in rates:
+        intervals = np.repeat(1./rate, math.floor(time_total*rate))
+        train = np.cumsum(intervals)
+        # strictly enforcing the last spike has to be within time_total
+        train = train[train <= time_total]
+        trains.append(train)
+    return trains
+
 def poisson_train(rates, time_total=100.):
     trains = []
     for rate in rates:
@@ -88,6 +98,16 @@ def poisson_train(rates, time_total=100.):
         train = train[train <= time_total]
         trains.append(train)
     return trains
+
+def get_periodic_spike_train(rates, t0=0., time_total=100., i_max=50., w=1.):
+    #w = 1. #pules width ms
+    i_injs = []
+    trains = periodic_train(rates, time_total)
+    for train in trains:
+        train = train[train <= time_total]
+        i_inj = sum(i_max*electrodes.unit_pulse(t,t0+t_spike,w) for t_spike in train)
+        i_injs.append(i_inj)
+    return i_injs, trains
 
 """
 Helper fuction to feed_gaussian_rate_poisson_spikes()
@@ -190,6 +210,17 @@ def feed_gaussian_rate_poisson_spikes_DL(
         for (n, neuron) in enumerate(net.layers[0].nodes()):
             class_num = spatial_idex[n]
             neuron.i_inj += i_injs[class_num]
+
+def feed_periodic_spikes(net, base_rate, ratio, time_total, i_max=50.):
+    t0 = 0.
+    rates = [base_rate, ratio*base_rate]
+    i_injs, _ = get_periodic_spike_train(rates, t0=t0, time_total=time_total, i_max=i_max)
+    # for (j, neuron) in enumerate(net.layers[0].nodes()):
+    #     neuron.i_inj += i_injs[j]
+    for (n, neuron) in enumerate(net.layers[0].nodes()):
+        neuron.i_inj += i_injs[0]
+    for (n, neuron) in enumerate(net.layers[1].nodes()):
+        neuron.i_inj += i_injs[1]
 
 
 

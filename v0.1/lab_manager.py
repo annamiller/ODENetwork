@@ -320,14 +320,23 @@ def show_all_dendrite_onto_layer_old(time_sampled_range, data, net, layer_idx):
 def show_all_dendrite_onto_layer(time_sampled_range, data, net, layer_idx, delta_time = None):
     pos_neurons = net.layers[layer_idx].nodes()
     for pos_neuron in pos_neurons:
+        ii_pos = pos_neuron.ii
+        v_pos = data[:,ii_pos]
         pre_neurons = list(net.predecessors(pos_neuron))
         for pre_neuron in pre_neurons:
+
             synapse = net[pre_neuron][pos_neuron]["synapse"]
             ii = synapse.ii
             v = data[:,ii]
             m = data[:,ii+1]
+            m_eq = data[-1,ii+1]
+            print(m_eq)
             h = data[:,ii+2]
+            h_eq = data[-1,ii+2]
+            print(h_eq)
             n = data[:,ii+3]
+            n_eq = data[-1,ii+3]
+            print(n_eq)
             a = data[:,ii+4]
             a_eq = data[-1,ii+4]
             print(a_eq)
@@ -337,30 +346,34 @@ def show_all_dendrite_onto_layer(time_sampled_range, data, net, layer_idx, delta
             ng = data[:,ii+6]
             ag = data[:,ii+7]
             ca = data[:,ii+8]
-            print(max(ca))
+            # print(max(ca))
             p0 = data[:,ii+9]
-            print(p0)
+            # print(p0)
             p1 = data[:,ii+10]
-            print(p1)
+            # print(p1)
             p2 = 1 - p0 - p1
             P = data[:,ii+11]
             D = data[:,ii+12]
             w = synapse.G0*p0 + synapse.G1*p1 + synapse.G2*p2
             print(w)
-            #i_a = -synapse.COND_A*ma*ha*(v - synapse.RE_PO_K)
+            # i_a = -synapse.COND_A*ma*ha*(v - synapse.RE_PO_K)
             i_ampa = -synapse.initial_cond*w*ag*(v-synapse.RE_PO_EX)
             B_nmda = 1./(1.+(1./3.57)*synapse.MG*np.exp(-0.062*v))
             i_nmda = -synapse.COND_NMDA*ng*B_nmda*(v-synapse.RE_PO_EX)
+            i_syn = i_ampa + i_nmda
             i_vgcc = -synapse.COND_CA*(v/synapse.CA_EQM) \
                 *(ca - synapse.CA_EX*np.exp(-2*v*synapse.FRT)) \
                 /(1 - np.exp(-2*v*synapse.FRT)) \
                 *a**2*b
             ca_vgcc = synapse.ICA_TO_CA*i_vgcc
             ca_nmda = synapse.INMDA_TO_CA*i_nmda
+            i_ds = synapse.COND_DEND_SOMA*(v- v_pos)
+            print(max(i_ds))
             DT = time_sampled_range
             fig, axes = plt.subplots(8,1,sharex=True,figsize=(7.5,15))
             plt.suptitle("dendrite_{}{}, dt={}ms".format(pre_neuron.ni, pos_neuron.ni, delta_time), fontsize=20)
             axes[0].plot(time_sampled_range, v, label="V")
+            #axes[0].plot(time_sampled_range, v_pos, label="V_pos")
             #np.savetxt('V.txt', np.transpose([DT, v]))
             axes[0].legend()
             #axes[1].plot(DT, B_nmda, label="B_nmda")
@@ -376,9 +389,12 @@ def show_all_dendrite_onto_layer(time_sampled_range, data, net, layer_idx, delta
             axes[1].plot(DT, b, label="b")
             #np.savetxt('b.txt', np.transpose([DT, b]))
             axes[1].legend()
-            axes[2].plot(DT, i_vgcc, label="I_VGCC")
+            #axes[2].plot(DT, i_ds, label="i_ds")
+            axes[2].plot(DT, i_ampa, label="i_ampa")
+            #axes[2].plot(DT, i_syn, label="i_syn")
+            #axes[2].plot(DT, i_vgcc, label="I_VGCC")
             #np.savetxt('i_vgcc.txt', np.transpose([DT, i_vgcc]))
-            axes[2].plot(DT, i_nmda, label="I_NMDA")
+            #axes[2].plot(DT, i_nmda, label="I_NMDA")
             #np.savetxt('i_nmda.txt', np.transpose([DT, i_nmda]))
             axes[2].legend()
             axes[3].plot(DT, ca_vgcc, label="C_VGCC")
