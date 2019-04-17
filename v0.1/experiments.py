@@ -46,6 +46,10 @@ def delay_pulses_on_layer_0_and_1(net, t0s=[0., 20], i_max=55., w = 1.0):
     for neuron in net.layers[1].nodes():
         neuron.i_inj = i_max*electrodes.unit_pulse(t,t0s[1],w)
 
+def delay_pulses_on_presyn_0_and_1(net, t0s=[0., 20], i_max=55., w = 1.0):
+    for (i,neuron) in enumerate(net.layers[0].nodes()):
+        neuron.i_inj = i_max*electrodes.unit_pulse(t,t0s[i],w) # the jitcode t
+
 def constant_current_on_top_layer(net, i_max=50.,w=1.):
     #i_max = 50. #5. # (some unit)
     t0 = 50. # ms

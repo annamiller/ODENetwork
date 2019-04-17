@@ -1046,24 +1046,6 @@ class SynapseWithDendrite_sync_old:
         else:
             return 9.32 + 0.333*(sym_backend.exp(-(21+Vm)/10.5))
 
-    def alpha_m(self, Vm):
-        return 0.32*(13 - (Vm-self.V_TH))/(sym_backend.exp((13-(Vm-self.V_TH))/4) - 1)
-
-    def beta_m(self, Vm):
-        return 0.28*((Vm-self.V_TH) - 40)/(sym_backend.exp(((Vm-self.V_TH)-40)/5) - 1)
-
-    def alpha_h(self, Vm):
-        return 0.128*sym_backend.exp((17 - (Vm-self.V_TH))/18)
-
-    def beta_h(self, Vm):
-        return 4/(sym_backend.exp((40-(Vm-self.V_TH))/5) + 1)
-
-    def alpha_n(self, Vm):
-        return 0.032*(15 - (Vm-self.V_TH))/(sym_backend.exp((15-(Vm-self.V_TH))/5) - 1)
-
-    def beta_n(self, Vm):
-        return 0.5/sym_backend.exp(((Vm-self.V_TH)-10)/40)
-
     def alpha_u(self, Vm):
         return 0.016/sym_backend.exp(-(Vm+52.7)/23)
 
@@ -1164,9 +1146,6 @@ class SynapseWithDendrite_sync_old:
         yield 1/self.tau_x(
             v, self.HF_PO_H, self.V_REW_H, self.TAU_0_H, self.TAU_1_H
             )*(self.x_eqm(v, self.HF_PO_H, self.V_REW_H) - h)
-        # yield self.alpha_m(v)*(1-m) - self.beta_m(v)*m
-        # yield self.alpha_h(v)*(1-h) - self.beta_h(v)*h
-        # yield self.alpha_n(v)*(1-n) - self.beta_n(v)*n
         yield 1/self.tau_a(v)*(self.x_eqm(v, self.HF_PO_A, self.V_REW_A) - a)
         yield 1/self.tau_b(v)*(self.x_eqm(v, self.HF_PO_B, self.V_REW_B) - b)
         yield self.alpha_u(v)*(1-u) - self.beta_u(v)*u
@@ -1826,8 +1805,8 @@ class Soma:
         i_inj = self.i_inj
 
         i_ds = sum([synapse.i_syn_ij(v) for (i,synapse) in enumerate(pre_synapses)])
-        i_ampa = sum([-self.AMPA_COND*synapse.ampa_gate*(v-self.RE_PO_EX) for (i,synapse) in enumerate(pre_synapses)])
-        #i_ampa = 0
+        #i_ampa = sum([-self.AMPA_COND*synapse.ampa_gate*(v-self.RE_PO_EX) for (i,synapse) in enumerate(pre_synapses)])
+        i_ampa = 0
         i_base = self.i_leak(v) + self.i_na(v,m,h) + self.i_k(v,n)
 
         yield 1/self.CAP_MEM*(i_base + i_ds + i_ampa + i_inj - 0.85)
@@ -2118,9 +2097,6 @@ class Soma_sync_old:
         i_base = self.i_leak(v) + self.i_na(v,m,h) + self.i_k(v,n)
 
         yield 1/self.CAP_MEM*(i_base + i_ds + i_inj + self.I_DC)
-        # yield self.alpha_m(v)*(1-m) - self.beta_m(v)*m
-        # yield self.alpha_h(v)*(1-h) - self.beta_h(v)*h
-        # yield self.alpha_n(v)*(1-n) - self.beta_n(v)*n
         yield 1/self.tau_x(
             v, self.HF_PO_M, self.V_REW_M, self.TAU_0_M, self.TAU_1_M
             )*(self.x_eqm(v, self.HF_PO_M, self.V_REW_M) - m)
@@ -2141,24 +2117,6 @@ class Soma_sync_old:
 
     def tau_x(self, Vm, V_0, sigma_x, tau_x_0, tau_x_1):
         return tau_x_0 + tau_x_1*(1-(sym_backend.tanh((Vm - V_0)/sigma_x))**2)
-
-    def alpha_m(self, Vm):
-        return 0.32*(13 - (Vm-self.V_TH))/(sym_backend.exp((13-(Vm-self.V_TH))/4) - 1)
-
-    def beta_m(self, Vm):
-        return 0.28*((Vm-self.V_TH) - 40)/(sym_backend.exp(((Vm-self.V_TH)-40)/5) - 1)
-
-    def alpha_h(self, Vm):
-        return 0.128*sym_backend.exp((17 - (Vm-self.V_TH))/18)
-
-    def beta_h(self, Vm):
-        return 4/(sym_backend.exp((40-(Vm-self.V_TH))/5) + 1)
-
-    def alpha_n(self, Vm):
-        return 0.032*(15 - (Vm-self.V_TH))/(sym_backend.exp((15-(Vm-self.V_TH))/5) - 1)
-
-    def beta_n(self, Vm):
-        return 0.5/sym_backend.exp(((Vm-self.V_TH)-10)/40)
 
     def i_leak(self, Vm):
         return -self.COND_LEAK*(Vm - self.RE_PO_LEAK)

@@ -29,7 +29,7 @@ reload(lm)
 reload(ex)
 
 # Step 1: Pick a network
-neuron_nums = [1,1] # number of neurons in each layer
+neuron_nums = [2,1] # number of neurons in each layer
 NUM_NEURON = np.sum(neuron_nums)
 NUM_SYN = np.prod(neuron_nums)
 neuron_type = nm.Soma
@@ -48,7 +48,7 @@ def get_data(delta_time):
     T0 = 250.
     TIME_DELAY = delta_time
 
-    ex.delay_pulses_on_layer_0_and_1(net, t0s=[T0, T0+TIME_DELAY], i_max=55, w = 1.0)
+    ex.delay_pulses_on_presyn_0_and_1(net, t0s=[T0, T0+TIME_DELAY], i_max=55, w = 1.0)
     # step 3: ask our lab manager to set up the lab for the experiment
     f, initial_conditions, neuron_inds = lm.set_up_lab(net)
 
@@ -71,7 +71,7 @@ for layer_idx in range(len(net.layers)):
 
 # stdp profile
 
-DT = np.linspace(-20,30,201)
+DT = np.linspace(-20,30,26)
 print(DT)
 DW = np.zeros(len(DT))
 ##############

@@ -329,20 +329,20 @@ def show_all_dendrite_onto_layer(time_sampled_range, data, net, layer_idx, delta
             ii = synapse.ii
             v = data[:,ii]
             m = data[:,ii+1]
-            m_eq = data[-1,ii+1]
-            print(m_eq)
+            #m_eq = data[-1,ii+1]
+            #print(m_eq)
             h = data[:,ii+2]
-            h_eq = data[-1,ii+2]
-            print(h_eq)
+            #h_eq = data[-1,ii+2]
+            #print(h_eq)
             n = data[:,ii+3]
-            n_eq = data[-1,ii+3]
-            print(n_eq)
+            #n_eq = data[-1,ii+3]
+            #print(n_eq)
             a = data[:,ii+4]
-            a_eq = data[-1,ii+4]
-            print(a_eq)
+            #a_eq = data[-1,ii+4]
+            #print(a_eq)
             b = data[:,ii+5]
-            b_eq = data[-1,ii+5]
-            print(b_eq)
+            #b_eq = data[-1,ii+5]
+            #print(b_eq)
             ng = data[:,ii+6]
             ag = data[:,ii+7]
             ca = data[:,ii+8]
@@ -355,7 +355,7 @@ def show_all_dendrite_onto_layer(time_sampled_range, data, net, layer_idx, delta
             P = data[:,ii+11]
             D = data[:,ii+12]
             w = synapse.G0*p0 + synapse.G1*p1 + synapse.G2*p2
-            print(w)
+            #print(w)
             # i_a = -synapse.COND_A*ma*ha*(v - synapse.RE_PO_K)
             i_ampa = -synapse.initial_cond*w*ag*(v-synapse.RE_PO_EX)
             B_nmda = 1./(1.+(1./3.57)*synapse.MG*np.exp(-0.062*v))
@@ -368,7 +368,7 @@ def show_all_dendrite_onto_layer(time_sampled_range, data, net, layer_idx, delta
             ca_vgcc = synapse.ICA_TO_CA*i_vgcc
             ca_nmda = synapse.INMDA_TO_CA*i_nmda
             i_ds = synapse.COND_DEND_SOMA*(v- v_pos)
-            print(max(i_ds))
+            #print(max(i_ds))
             DT = time_sampled_range
             fig, axes = plt.subplots(8,1,sharex=True,figsize=(7.5,15))
             plt.suptitle("dendrite_{}{}, dt={}ms".format(pre_neuron.ni, pos_neuron.ni, delta_time), fontsize=20)
@@ -421,7 +421,7 @@ def show_all_dendrite_onto_layer(time_sampled_range, data, net, layer_idx, delta
             #np.savetxt('w.txt', np.transpose([DT, w]))
             axes[7].legend()
             plt.show()
-            fig.savefig("dendrite.png",dpi=500, bbox_inches = 'tight')
+            #fig.savefig("dendrite.png",dpi=500, bbox_inches = 'tight')
 
 """
 Helper function to smooth data using exponential weighted moving weighted moving average
