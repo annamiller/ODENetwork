@@ -147,6 +147,13 @@ def const_current(net, num_layers, neuron_inds, current_vals):
         for i in range(len(neuron_inds[l])):
             layer_list[neuron_inds[l][i]].i_inj = current_vals[l][i]
 
+def sine_wave(net, num_layers, neuron_inds, rates, i_max=50):
+    for l in range(num_layers):
+        layer = net.layers[l].nodes()
+        layer_list = list(layer)
+        for i in range(len(neuron_inds[l])):
+            layer_list[neuron_inds[l][i]].i_inj = i_max*electrodes.sin(t*rates[l][i])
+
 def gradual_current_increase(net, num_layers, neuron_inds, max_current,tr=20, tf=50, w=100):
     # Defining the stimuli structure. tr is rise time, tf is fall time, w is time
     # for constant current

@@ -22,6 +22,9 @@ def heaviside(x):
 def unit_pulse(t,t0,w):
     return heaviside(t-t0)*heaviside(w+t0-t)
 
+def sin(t):
+    return sym_backend.sin(t)
+
 """
 sym2num(expr):
 
