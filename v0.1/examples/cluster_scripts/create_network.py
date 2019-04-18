@@ -29,10 +29,10 @@ glo_para = dict(num_pn=6, num_ln=2, # flies: 3 and 30
     PNClass=nm.PN_2, LNClass=nm.LN,
     PNSynapseClass=nm.Synapse_nAch_PN_2, LNSynapseClass=nm.Synapse_gaba_LN_with_slow)
 
-al_cond_para = dict(gLN = 110, gPN = -1, gLNPN = 300.0, gPNLN = 600.0)
-al_prob_para = {}
+al_cond_para = dict(gLN = 110, gPN = -1, gLNPN = 400.0, gPNLN = 400.0)
+al_prob_para = dict(prob_l2p = 0.4, prob_l2l=0.4)
 
-al_para = dict(num_glo=15, glo_para=glo_para,al_cond_para=al_cond_para,al_prob_para=al_prob_para) # flies: 54
+al_para = dict(num_glo=45, glo_para=glo_para,al_cond_para=al_cond_para,al_prob_para=al_prob_para) # flies: 54
 
 
 AL = net.get_antennal_lobe(**al_para)
