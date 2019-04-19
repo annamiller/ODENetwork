@@ -32,13 +32,13 @@ networks.draw_layered_digraph(net)
 #     net, base_rate, i_max=i_max, num_sniffs=num_sniffs,
 #     time_per_sniff=time_per_sniff)
 
-# # constant
-# num_layers=2
-# neuron_inds=[[0], [0]]
-# current_vals = [[2.5], [15]]
-# total_time =200
-# ex.const_current(net, num_layers, neuron_inds, current_vals)
-# ex.const_current(net, num_layers, neuron_inds, current_vals)
+# constant
+num_layers = 2
+neuron_inds = [[0], [0]]
+# adjust post-synaptic DC current to set initial post-synaptic frequency
+current_vals = [[2.5], [14]]
+total_time = 1000
+ex.const_current(net, num_layers, neuron_inds, current_vals)
 
 # # periodic spikes
 # total_time = 1000
@@ -47,14 +47,13 @@ networks.draw_layered_digraph(net)
 # ratio = 0.95
 # ex.feed_periodic_spikes(net, base_rate, ratio, total_time, i_max)
 
-# sine wave
-i_max = 25
-num_layers = 2
-neuron_inds = [[0], [0]]
-rates = [[0.5], [0.55]]
-total_time = 200
-ex.sine_wave(net, num_layers, neuron_inds, rates, i_max)
-ex.sine_wave(net, num_layers, neuron_inds, rates, i_max)
+# # sine wave
+# i_max = 25
+# num_layers = 2
+# neuron_inds = [[0], [0]]
+# rates = [[0.5], [0.55]]
+# total_time = 200
+# ex.sine_wave(net, num_layers, neuron_inds, rates, i_max)
 
 # step 3: ask our lab manager to set up the lab for the experiment.
 f, initial_conditions, _ = lm.set_up_lab(net)
@@ -64,9 +63,10 @@ time_sampled_range = np.arange(0., total_time, 0.1)
 data = lm.run_lab(f, initial_conditions, time_sampled_range)
 
 # step 5: plot
-for layer_idx in range(len(net.layers)):
-    lm.show_all_neuron_in_layer(
-        time_sampled_range, data, net, layer_idx)
+# for layer_idx in range(len(net.layers)):
+#     lm.show_all_neuron_in_layer(
+#         time_sampled_range, data, net, layer_idx)
+lm.show_one_to_one_neuron_together(time_sampled_range, data, net)
 
 for layer_idx in range(len(net.layers)):
     lm.show_all_dendrite_onto_layer(

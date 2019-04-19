@@ -211,12 +211,12 @@ def show_all_neuron_in_layer(time_sampled_range, data, net, layer_idx):
     pre_neurons = net.layers[layer_idx].nodes()
     for (n, pre_neuron) in enumerate(pre_neurons):
         ii = pre_neuron.ii
-        v_m = data[:,ii]
-        ca = data[:,ii+6]
+        v_m = data[:, ii]
+        # ca = data[:, ii+6]
         if pre_neuron.i_inj is None:
-            fig, axes = plt.subplots(2,1,sharex=True)
+            fig, axes = plt.subplots(2, 1, sharex=True)
         else:
-            fig, axes = plt.subplots(2,1,sharex=True)
+            fig, axes = plt.subplots(2, 1, sharex=True)
             i_inj = electrodes.sym2num(t, pre_neuron.i_inj)
             i_inj = i_inj(time_sampled_range)
             axes[1].plot(time_sampled_range, i_inj, label="i_inj")
@@ -232,7 +232,25 @@ def show_all_neuron_in_layer(time_sampled_range, data, net, layer_idx):
         # axes[1].legend()
         axes[-1].set_xlabel("time [ms]")
         plt.suptitle("Neuron {} in layer {}".format(pre_neuron.ni, layer_idx))
-    plt.show()
+    plt.show(block=False)
+
+def show_one_to_one_neuron_together(time_sampled_range, data, net):
+    neurons = net.nodes()
+    fig, axes = plt.subplots(2, 1, sharex=True)
+    for (n, neuron) in enumerate(neurons):
+        ii = neuron.ii
+        v_m = data[:, ii]
+        # ca = data[:, ii+6]
+        i_inj = electrodes.sym2num(t, neuron.i_inj)
+        i_inj = i_inj(time_sampled_range)
+        axes[1].plot(time_sampled_range, i_inj, label="i_inj_{}".format(n))
+        axes[0].plot(time_sampled_range, v_m, label="V_m_{}".format(n))
+    axes[1].legend()
+    axes[0].legend()
+    axes[1].set_ylabel("I [some unit]")
+    axes[0].set_ylabel("V_m [mV]")
+    axes[-1].set_xlabel("time [ms]")
+    plt.show(block=False)
 
 def show_all_synaspe_onto_layer(time_sampled_range, data, net, layer_idx):
     def sigmoid(x):
@@ -245,6 +263,7 @@ def show_all_synaspe_onto_layer(time_sampled_range, data, net, layer_idx):
             #THETA_D = synapse.THETA_D
             #THETA_P = synapse.THETA_P
             ii = synapse.ii
+
             fig, axes = plt.subplots(3,1,sharex=True)
             red_syn_weight = data[:,ii]
             ca = data[:,ii+2]
@@ -362,7 +381,7 @@ def show_all_dendrite_onto_layer(time_sampled_range, data, net, layer_idx, delta
             axes[7].plot(DT, w, label="W")
             #np.savetxt('w.txt', np.transpose([DT, w]))
             axes[7].legend()
-            plt.show()
+            plt.show(block=False)
             #fig.savefig("dendrite.png",dpi=500, bbox_inches = 'tight')
 
 """
