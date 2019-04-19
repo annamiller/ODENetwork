@@ -4,7 +4,11 @@ used to test stdp sychronization.
 one to one connection
 different types of currents such as poisson spikes, constant currents,
 periodic spikes and sine waves, were injected to both pre- and post-synaptic
-neuron with different spiking frequencies.
+neuron with different spiking patterns.
+
+For DC current, in both of the following cases, sychronization is witnessed
+case1: post freq is faster than pre
+case2: post freq is slower than pre
 """
 import numpy as np
 import sys
@@ -22,6 +26,19 @@ networks.draw_layered_digraph(net)
 
 # step 2: design an experiment. four different shapes of input
 
+# constant
+num_layers = 2
+neuron_inds = [[0], [0]]
+# adjust post-synaptic DC current to set initial post-synaptic frequency
+
+# case1: post freq is faster than pre
+current_vals = [[2.5], [14]]
+# # case2: post freq is slower than pre
+# current_vals = [[3.5], [10]]
+
+total_time = 1000
+ex.const_current(net, num_layers, neuron_inds, current_vals)
+
 # # poisson
 # i_max = 55.
 # num_sniffs = 20
@@ -31,14 +48,6 @@ networks.draw_layered_digraph(net)
 # ex.feed_gaussian_rate_poisson_spikes_DL(
 #     net, base_rate, i_max=i_max, num_sniffs=num_sniffs,
 #     time_per_sniff=time_per_sniff)
-
-# constant
-num_layers = 2
-neuron_inds = [[0], [0]]
-# adjust post-synaptic DC current to set initial post-synaptic frequency
-current_vals = [[2.5], [14]]
-total_time = 1000
-ex.const_current(net, num_layers, neuron_inds, current_vals)
 
 # # periodic spikes
 # total_time = 1000
